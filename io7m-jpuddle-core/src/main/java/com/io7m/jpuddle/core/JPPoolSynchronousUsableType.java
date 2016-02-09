@@ -23,10 +23,11 @@ package com.io7m.jpuddle.core;
  *
  * @param <K> The type of keys
  * @param <T> The type of pooled values
+ * @param <U> The type of user-visible pooled values
  * @param <C> The type of context values
  */
 
-public interface JPPoolSynchronousUsableType<K, T, C>
+public interface JPPoolSynchronousUsableType<K, T extends U, U, C>
 {
   /**
    * Trim free objects within the pool to reduce the pool size.
@@ -53,7 +54,7 @@ public interface JPPoolSynchronousUsableType<K, T, C>
    * @throws JPPoolException               On errors
    */
 
-  T get(
+  U get(
     C context,
     K key)
     throws JPPoolException, JPPoolObjectCreationException;
@@ -72,7 +73,7 @@ public interface JPPoolSynchronousUsableType<K, T, C>
 
   void returnValue(
     C context,
-    T value)
+    U value)
     throws JPPoolException, JPPoolObjectReturnException;
 
   /**

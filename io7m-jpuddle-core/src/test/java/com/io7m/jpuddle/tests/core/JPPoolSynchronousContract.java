@@ -43,7 +43,8 @@ public abstract class JPPoolSynchronousContract
 
   @Rule public ExpectedException expected = ExpectedException.none();
 
-  protected abstract <K, T, C> JPPoolSynchronous<K, T, C> newPool(
+  protected abstract <K, T extends U, U, C>
+  JPPoolSynchronous<K, T, U, C> newPool(
     JPPoolableListenerType<K, T, C> listener,
     long soft_limit,
     long hard_limit);
@@ -53,7 +54,7 @@ public abstract class JPPoolSynchronousContract
   {
     final PooledListener listener = new PooledListener();
 
-    final JPPoolSynchronous<Integer, Pooled, Integer> p =
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
       this.newPool(listener, 10L, 20L);
 
     final Pooled[] values = new Pooled[15];
@@ -70,7 +71,7 @@ public abstract class JPPoolSynchronousContract
   {
     final PooledListener listener = new PooledListener();
 
-    final JPPoolSynchronous<Integer, Pooled, Integer> p =
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
       this.newPool(listener, 10L, 20L);
 
     final Pooled[] values = new Pooled[20];
@@ -90,7 +91,7 @@ public abstract class JPPoolSynchronousContract
   {
     final PooledListener listener = new PooledListener();
 
-    final JPPoolSynchronous<Integer, Pooled, Integer> p =
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
       this.newPool(listener, 10L, 20L);
 
     final Integer context = Integer.valueOf(2);
@@ -131,7 +132,7 @@ public abstract class JPPoolSynchronousContract
     final PooledListenerReuseErrorSuppressed listener =
       new PooledListenerReuseErrorSuppressed();
 
-    final JPPoolSynchronous<Integer, Pooled, Integer> p =
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
       this.newPool(listener, 1L, 2L);
 
     final Integer context = Integer.valueOf(2);
@@ -167,7 +168,7 @@ public abstract class JPPoolSynchronousContract
   {
     final PooledListener listener = new PooledListener();
 
-    final JPPoolSynchronous<Integer, Pooled, Integer> p =
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
       this.newPool(listener, 10L, 20L);
 
     final Integer context = Integer.valueOf(2);
@@ -211,7 +212,7 @@ public abstract class JPPoolSynchronousContract
   {
     final PooledListener listener = new PooledListener();
 
-    final JPPoolSynchronous<Integer, Pooled, Integer> p =
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
       this.newPool(listener, 0L, 20L);
 
     final Integer context = Integer.valueOf(2);
@@ -256,7 +257,7 @@ public abstract class JPPoolSynchronousContract
     final IntCreationFailureObjectListener listener =
       new IntCreationFailureObjectListener();
 
-    final JPPoolSynchronous<Integer, Pooled, Integer> p =
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
       this.newPool(listener, 10L, 20L);
 
     final Integer context = Integer.valueOf(2);
@@ -271,7 +272,7 @@ public abstract class JPPoolSynchronousContract
     final IntCreationFailureSizeListener listener =
       new IntCreationFailureSizeListener();
 
-    final JPPoolSynchronous<Integer, Pooled, Integer> p =
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
       this.newPool(listener, 10L, 20L);
 
     final Integer context = Integer.valueOf(2);
@@ -286,7 +287,7 @@ public abstract class JPPoolSynchronousContract
     final IntCreationFailureEstimateSizeListener listener =
       new IntCreationFailureEstimateSizeListener();
 
-    final JPPoolSynchronous<Integer, Pooled, Integer> p =
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
       this.newPool(listener, 10L, 20L);
 
     final Integer context = Integer.valueOf(2);
@@ -300,7 +301,7 @@ public abstract class JPPoolSynchronousContract
   {
     final PooledListener listener = new PooledListener();
 
-    final JPPoolSynchronous<Integer, Pooled, Integer> p =
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
       this.newPool(listener, 10L, 20L);
 
     final Integer context = Integer.valueOf(2);
@@ -317,7 +318,7 @@ public abstract class JPPoolSynchronousContract
     final PooledListener listener = new PooledListener();
     listener.estimated_size = 21L;
 
-    final JPPoolSynchronous<Integer, Pooled, Integer> p =
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
       this.newPool(listener, 10L, 20L);
 
     this.expected.expect(JPPoolHardLimitExceededException.class);
@@ -331,7 +332,7 @@ public abstract class JPPoolSynchronousContract
     listener.estimated_size = 0x8000000000000065L;
     listener.size = 1L;
 
-    final JPPoolSynchronous<Integer, Pooled, Integer> p =
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
       this.newPool(
         listener,
         0L,
@@ -348,7 +349,7 @@ public abstract class JPPoolSynchronousContract
     listener.estimated_size = 1L;
     listener.size = 0x8000000000000065L;
 
-    final JPPoolSynchronous<Integer, Pooled, Integer> p =
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
       this.newPool(
         listener,
         0L,
@@ -366,7 +367,7 @@ public abstract class JPPoolSynchronousContract
     listener.size =
       0b11111111_11111111_11111111_11111111_11111111_11111111_11111111_11111111L;
 
-    final JPPoolSynchronous<Integer, Pooled, Integer> p =
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
       this.newPool(
         listener,
         0L,
@@ -385,7 +386,7 @@ public abstract class JPPoolSynchronousContract
     listener.size =
       1L;
 
-    final JPPoolSynchronous<Integer, Pooled, Integer> p =
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
       this.newPool(
         listener,
         0L,

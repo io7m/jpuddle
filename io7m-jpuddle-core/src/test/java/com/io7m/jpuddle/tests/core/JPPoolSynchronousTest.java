@@ -22,7 +22,7 @@ import com.io7m.jpuddle.core.JPPoolableListenerType;
 public final class JPPoolSynchronousTest extends JPPoolSynchronousContract
 {
   @Override
-  protected <K, T, C> JPPoolSynchronous<K, T, C> newPool(
+  protected <K, T extends U, U, C> JPPoolSynchronous<K, T, U, C> newPool(
     final JPPoolableListenerType<K, T, C> listener,
     final long soft_limit,
     final long hard_limit)

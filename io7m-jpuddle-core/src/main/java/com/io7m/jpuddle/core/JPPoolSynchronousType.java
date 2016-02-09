@@ -19,15 +19,19 @@ package com.io7m.jpuddle.core;
 /**
  * The type of usable synchronous pools that yield values of type {@code T} for
  * keys of type {@code K}, using context values of type {@code C} to create new
- * values if necessary.
+ * values if necessary. Only values of type {@code U} are exposed to the user:
+ * This is to allow the pool to, for example, allocate and manipulate mutable
+ * values internally, but only expose read-only interfaces to the user
+ * requesting objects from the pool.
  *
  * @param <K> The type of keys
  * @param <T> The type of pooled values
+ * @param <U> The type of externally visible pooled values
  * @param <C> The type of context values
  */
 
-public interface JPPoolSynchronousType<K, T, C> extends
-  JPPoolSynchronousUsableType<K, T, C>
+public interface JPPoolSynchronousType<K, T extends U, U, C> extends
+  JPPoolSynchronousUsableType<K, T, U, C>
 {
   // No extra functions
 }

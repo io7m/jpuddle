@@ -33,12 +33,13 @@ import java.util.SortedSet;
  * The default implementation of the {@link JPPoolSynchronousType} interface.
  *
  * @param <K> The type of keys
- * @param <T> The type of pooled values
+ * @param <T> The type of internal pooled values
+ * @param <U> The type of user-visible pooled values
  * @param <C> The type of context values
  */
 
-public final class JPPoolSynchronous<K, T, C> implements
-  JPPoolSynchronousType<K, T, C>
+public final class JPPoolSynchronous<K, T extends U, U, C> implements
+  JPPoolSynchronousType<K, T, U, C>
 {
   private static final Logger LOG;
 
@@ -129,12 +130,13 @@ public final class JPPoolSynchronous<K, T, C> implements
    * @param hard_limit The hard size limit
    * @param <K>        The type of keys
    * @param <T>        The type of values
+   * @param <U>        The type of user-visible pooled values
    * @param <C>        The type of contextual values
    *
    * @return A new pool
    */
 
-  public static <K, T, C> JPPoolSynchronous<K, T, C> newPool(
+  public static <K, T extends U, U, C> JPPoolSynchronous<K, T, U, C> newPool(
     final JPPoolableListenerType<K, T, C> listener,
     final long soft_limit,
     final long hard_limit)
@@ -304,7 +306,7 @@ public final class JPPoolSynchronous<K, T, C> implements
   @Override
   public void returnValue(
     final C context,
-    final T value)
+    final U value)
     throws JPPoolException
   {
     NullCheck.notNull(context);
