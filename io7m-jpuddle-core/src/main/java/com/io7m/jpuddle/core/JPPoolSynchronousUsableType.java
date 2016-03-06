@@ -30,6 +30,12 @@ package com.io7m.jpuddle.core;
 public interface JPPoolSynchronousUsableType<K, T extends U, U, C>
 {
   /**
+   * @return {@code true} iff the pool has been deleted
+   */
+
+  boolean isDeleted();
+
+  /**
    * Trim free objects within the pool to reduce the pool size.
    *
    * @param context A context value

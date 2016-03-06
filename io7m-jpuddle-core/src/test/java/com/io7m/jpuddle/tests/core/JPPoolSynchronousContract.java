@@ -21,6 +21,7 @@ import com.io7m.jpuddle.core.JPPoolHardLimitExceededException;
 import com.io7m.jpuddle.core.JPPoolInternalOverflowException;
 import com.io7m.jpuddle.core.JPPoolObjectCreationException;
 import com.io7m.jpuddle.core.JPPoolObjectReturnException;
+import com.io7m.jpuddle.core.JPPoolObjectsNotReturnedException;
 import com.io7m.jpuddle.core.JPPoolSynchronous;
 import com.io7m.jpuddle.core.JPPoolableListenerType;
 import com.io7m.jranges.RangeCheckException;
@@ -310,6 +311,60 @@ public abstract class JPPoolSynchronousContract
     p.returnValue(context, r);
     this.expected.expect(JPPoolObjectReturnException.class);
     p.returnValue(context, r);
+  }
+
+  @Test
+  public final void testDeleteUnsafely()
+  {
+    final PooledListener listener = new PooledListener();
+
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
+      this.newPool(listener, 20L, 30L);
+
+    final Integer context = Integer.valueOf(2);
+
+    for (int index = 0; index < 20; ++index) {
+      final Pooled r = p.get(context, Integer.valueOf(index));
+    }
+
+    p.deleteUnsafely(context);
+    Assert.assertTrue(p.isDeleted());
+    Assert.assertEquals(20L, (long) listener.deletes);
+  }
+
+  @Test
+  public final void testDeleteSafely()
+  {
+    final PooledListener listener = new PooledListener();
+
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
+      this.newPool(listener, 10L, 20L);
+
+    final Integer context = Integer.valueOf(2);
+
+    for (int index = 0; index < 10; ++index) {
+      final Pooled r = p.get(context, Integer.valueOf(index));
+      p.returnValue(context, r);
+    }
+
+    p.deleteSafely(context);
+    Assert.assertTrue(p.isDeleted());
+    Assert.assertEquals(10L, (long) listener.deletes);
+  }
+
+  @Test
+  public final void testDeleteSafelyNotReturned()
+  {
+    final PooledListener listener = new PooledListener();
+
+    final JPPoolSynchronous<Integer, Pooled, Pooled, Integer> p =
+      this.newPool(listener, 10L, 20L);
+
+    final Integer context = Integer.valueOf(2);
+    final Pooled r = p.get(context, Integer.valueOf(0));
+
+    this.expected.expect(JPPoolObjectsNotReturnedException.class);
+    p.deleteSafely(context);
   }
 
   @Test

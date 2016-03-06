@@ -19,12 +19,15 @@ package com.io7m.jpuddle.core;
 import com.io7m.jnull.NullCheck;
 import com.io7m.junsigned.ranges.UnsignedRangeCheck;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectBidirectionalIterator;
 import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.valid4j.Assertive;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -55,6 +58,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
   private final long                                size_limit_hard;
   private       long                                size_now;
   private       long                                time;
+  private       boolean                             deleted;
 
   private JPPoolSynchronous(
     final JPPoolableListenerType<K, T, C> in_listener,
@@ -85,6 +89,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
 
     this.size_now = 0L;
     this.time = 0L;
+    this.deleted = false;
   }
 
   private static <K, T> T mapListTake(
@@ -145,6 +150,12 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
   }
 
   @Override
+  public boolean isDeleted()
+  {
+    return this.deleted;
+  }
+
+  @Override
   public void trim(final C context)
     throws JPPoolException
   {
@@ -168,6 +179,12 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
     }
   }
 
+  private void checkNotDeleted()
+  {
+    if (this.deleted) {
+      throw new JPPoolDeletedException("Pool has been deleted.");
+    }
+  }
 
   @Override
   public T get(
@@ -177,6 +194,8 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
   {
     NullCheck.notNull(context);
     NullCheck.notNull(key);
+
+    this.checkNotDeleted();
 
     /**
      * Trim the pool down to the soft limit, if possible.
@@ -312,6 +331,8 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
     NullCheck.notNull(context);
     NullCheck.notNull(value);
 
+    this.checkNotDeleted();
+
     if (this.entries_used.containsKey(value)) {
       final TimedEntry<K, T> e = this.entries_used.get(value);
       this.entries_used.remove(value);
@@ -333,7 +354,105 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
   @Override
   public long size()
   {
+    this.checkNotDeleted();
     return this.size_now;
+  }
+
+  @Override
+  public void deleteSafely(final C context)
+    throws JPPoolException
+  {
+    NullCheck.notNull(context);
+
+    this.checkNotDeleted();
+
+    if (!this.entries_used.isEmpty()) {
+      throw this.errorNotEmpty();
+    }
+
+    this.deleteActual(context);
+  }
+
+  @Override
+  public void deleteUnsafely(final C context)
+    throws JPPoolException
+  {
+    NullCheck.notNull(context);
+
+    this.checkNotDeleted();
+    this.deleteActual(context);
+  }
+
+  private void deleteActual(
+    final C context)
+  {
+    try {
+
+      {
+        final ObjectArrayList<TimedEntry<K, T>> xs =
+          new ObjectArrayList<>();
+        final Iterator<Map.Entry<T, TimedEntry<K, T>>> iter =
+          this.entries_used.entrySet().iterator();
+
+        while (iter.hasNext()) {
+          final Map.Entry<T, TimedEntry<K, T>> e = iter.next();
+          xs.add(e.getValue());
+        }
+
+        for (int index = 0; index < xs.size(); ++index) {
+          final TimedEntry<K, T> e = xs.get(index);
+          this.returnValue(context, e.value);
+        }
+      }
+
+      {
+        final ObjectArrayList<TimedEntry<K, T>> xs =
+          new ObjectArrayList<>();
+        final ObjectBidirectionalIterator<TimedEntry<K, T>> iter =
+          this.entries_free_timed.iterator();
+
+        while (iter.hasNext()) {
+          xs.add(iter.next());
+        }
+
+        for (int index = 0; index < xs.size(); ++index) {
+          final TimedEntry<K, T> e = xs.get(index);
+          this.evict(context, e);
+        }
+      }
+
+    } finally {
+      this.deleted = true;
+    }
+  }
+
+  private JPPoolObjectsNotReturnedException errorNotEmpty()
+  {
+    final StringBuilder sb = new StringBuilder(256);
+
+    int count = 0;
+    final Iterator<Map.Entry<T, TimedEntry<K, T>>> iter =
+      this.entries_used.entrySet().iterator();
+
+    sb.append("Attempted to delete a pool with items not yet returned.");
+    sb.append(System.lineSeparator());
+    sb.append("The first 10 items:");
+    sb.append(System.lineSeparator());
+
+    while (iter.hasNext()) {
+      if (count == 10) {
+        break;
+      }
+      ++count;
+
+      final Map.Entry<T, TimedEntry<K, T>> e = iter.next();
+      sb.append(e.getKey());
+      sb.append(" -> ");
+      sb.append(e.getValue().value);
+      sb.append(System.lineSeparator());
+    }
+
+    return new JPPoolObjectsNotReturnedException(sb.toString());
   }
 
   private static final class CheckedListener<K, T, C> implements

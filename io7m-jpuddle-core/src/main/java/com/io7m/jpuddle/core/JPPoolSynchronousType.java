@@ -33,5 +33,28 @@ package com.io7m.jpuddle.core;
 public interface JPPoolSynchronousType<K, T extends U, U, C> extends
   JPPoolSynchronousUsableType<K, T, U, C>
 {
-  // No extra functions
+  /**
+   * Delete all items in the pool and shut the pool down. The method will refuse
+   * to delete the pool if any items are yet to be returned.
+   *
+   * @param context A context value
+   *
+   * @throws JPPoolException Iff any of the items in the pool have yet to be
+   *                         returned
+   */
+
+  void deleteSafely(C context)
+    throws JPPoolException;
+
+  /**
+   * Delete all items in the pool and shut the pool down. The method will delete
+   * the pool even if there are items yet to be returned.
+   *
+   * @param context A context value
+   *
+   * @throws JPPoolException On errors
+   */
+
+  void deleteUnsafely(C context)
+    throws JPPoolException;
 }
