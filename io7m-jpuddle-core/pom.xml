@@ -8,7 +8,7 @@
   <parent>
     <groupId>com.io7m.jpuddle</groupId>
     <artifactId>io7m-jpuddle</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
   </parent>
   <artifactId>io7m-jpuddle-core</artifactId>
 
@@ -40,6 +40,10 @@
       <groupId>com.io7m.junsigned</groupId>
       <artifactId>io7m-junsigned-ranges</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.io7m.jaffirm</groupId>
+      <artifactId>io7m-jaffirm-core</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -48,10 +52,6 @@
     <dependency>
       <groupId>it.unimi.dsi</groupId>
       <artifactId>fastutil</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.valid4j</groupId>
-      <artifactId>valid4j</artifactId>
     </dependency>
 
     <dependency>
