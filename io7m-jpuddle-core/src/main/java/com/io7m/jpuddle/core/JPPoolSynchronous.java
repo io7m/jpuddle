@@ -16,6 +16,8 @@
 
 package com.io7m.jpuddle.core;
 
+import com.io7m.jaffirm.core.Postconditions;
+import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jnull.NullCheck;
 import com.io7m.junsigned.ranges.UnsignedRangeCheck;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
@@ -25,7 +27,6 @@ import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.valid4j.Assertive;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -50,15 +51,15 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
     LOG = LoggerFactory.getLogger(JPPoolSynchronous.class);
   }
 
-  private final JPPoolableListenerType<K, T, C>     listener;
+  private final JPPoolableListenerType<K, T, C> listener;
   private final Map<K, SortedSet<TimedEntry<K, T>>> entries_free;
-  private final ObjectRBTreeSet<TimedEntry<K, T>>   entries_free_timed;
-  private final Map<T, TimedEntry<K, T>>            entries_used;
-  private final long                                size_limit_soft;
-  private final long                                size_limit_hard;
-  private       long                                size_now;
-  private       long                                time;
-  private       boolean                             deleted;
+  private final ObjectRBTreeSet<TimedEntry<K, T>> entries_free_timed;
+  private final Map<T, TimedEntry<K, T>> entries_used;
+  private final long size_limit_soft;
+  private final long size_limit_hard;
+  private long size_now;
+  private long time;
+  private boolean deleted;
 
   private JPPoolSynchronous(
     final JPPoolableListenerType<K, T, C> in_listener,
@@ -310,15 +311,26 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
     final C context,
     final TimedEntry<K, T> e)
   {
-    Assertive.ensure(this.entries_free.containsKey(e.key));
-    Assertive.ensure(Long.compareUnsigned(this.size_now, 0L) > 0);
+    Preconditions.checkPrecondition(
+      e.key,
+      this.entries_free.containsKey(e.key),
+      k -> "Key " + k + " must be free");
+
+    Preconditions.checkPreconditionL(
+      this.size_now,
+      Long.compareUnsigned(this.size_now, 0L) > 0,
+      x -> "Size " + x + " must be > 0");
 
     final SortedSet<TimedEntry<K, T>> free = this.entries_free.get(e.key);
     free.remove(e);
     this.entries_free_timed.remove(e);
     this.size_now = BigUnsigned.checkedSubtractLong(this.size_now, e.size);
 
-    Assertive.ensure(Long.compareUnsigned(this.size_now, 0L) >= 0);
+    Postconditions.checkPostconditionL(
+      this.size_now,
+      Long.compareUnsigned(this.size_now, 0L) >= 0,
+      x -> "Size " + x + " must be >= 0");
+
     this.listener.onDelete(context, e.key, e.value);
   }
 
@@ -574,8 +586,8 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
   private static final class TimedEntry<K, T> implements
     Comparable<TimedEntry<K, T>>
   {
-    private K    key;
-    private T    value;
+    private K key;
+    private T value;
     private long time;
     private long size;
 
