@@ -6,12 +6,19 @@
   </a:author>
   <a:id>http://github.com/io7m/jpuddle/releases.atom</a:id>
   <a:title>io7m-jpuddle Releases</a:title>
-  <a:updated>2000-01-01T00:00:00Z</a:updated>
+  <a:updated>2016-12-14T00:00:00Z</a:updated>
   <a:entry>
     <a:id>0</a:id>
-    <a:updated>2000-01-01T00:00:00Z</a:updated>
-    <a:published>2000-01-01T00:00:00Z</a:published>
-    <a:title>io7m-jpuddle 1.0.0 released</a:title>
-    <a:content type="text"> io7m-jpuddle 1.0.0 released </a:content>
+    <a:updated>2016-12-14T00:00:00Z</a:updated>
+    <a:published>2016-12-14T00:00:00Z</a:published>
+    <a:title>io7m-jpuddle 0.2.0 released</a:title>
+    <a:content type="text"> io7m-jpuddle 0.2.0 released </a:content>
+  </a:entry>
+  <a:entry>
+    <a:id>1</a:id>
+    <a:updated>2016-05-06T00:00:00Z</a:updated>
+    <a:published>2016-05-06T00:00:00Z</a:published>
+    <a:title>io7m-jpuddle 0.1.0 released</a:title>
+    <a:content type="text"> io7m-jpuddle 0.1.0 released </a:content>
   </a:entry>
 </a:feed>
