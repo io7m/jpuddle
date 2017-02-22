@@ -251,6 +251,12 @@
           <artifactId>truezip-maven-plugin</artifactId>
           <version>1.2</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>3.2.0</version>
+          <extensions>true</extensions>
+        </plugin>
 
         <!-- Require JDK >= 1.8 -->
         <plugin>
@@ -399,6 +405,26 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+
+      <!-- Produce OSGi bundle -->
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Specification-Title>${project.name}</Specification-Title>
+            <Specification-Version>${project.version}</Specification-Version>
+            <Specification-Vendor>io7m.com</Specification-Vendor>
+            <Implementation-Title>${project.name}</Implementation-Title>
+            <Implementation-Version>${project.version}</Implementation-Version>
+            <Implementation-Vendor>io7m.com</Implementation-Vendor>
+            <Implementation-Vendor-Id>${project.groupId}</Implementation-Vendor-Id>
+            <Built-By>io7m</Built-By>
+            <Sealed>true</Sealed>
+          </instructions>
+        </configuration>
       </plugin>
     </plugins>
   </build>

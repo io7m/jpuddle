@@ -12,7 +12,7 @@
   </parent>
   <artifactId>io7m-jpuddle-core</artifactId>
 
-  <packaging>jar</packaging>
+  <packaging>bundle</packaging>
   <name>io7m-jpuddle-core</name>
   <description>Sized pool types (Core)</description>
   <url>http://io7m.github.io/jpuddle/</url>
@@ -72,6 +72,20 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
+
+      <!-- Produce OSGi bundle -->
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Export-Package>
+              com.io7m.jpuddle.core
+            </Export-Package>
+          </instructions>
+        </configuration>
       </plugin>
     </plugins>
   </build>

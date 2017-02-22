@@ -3,6 +3,16 @@
   <c:project>io7m-jpuddle</c:project>
 
   <c:release c:ticket-system="com.github.io7m.jpuddle">
+    <c:date>2017-02-22</c:date>
+    <c:version>0.3.0</c:version>
+    <c:item>
+      <c:date>2017-02-22</c:date>
+      <c:type-code-new/>
+      <c:summary>The produced packages are now OSGi bundles.</c:summary>
+    </c:item>
+  </c:release>
+
+  <c:release c:ticket-system="com.github.io7m.jpuddle">
     <c:date>2016-12-14</c:date>
     <c:version>0.2.0</c:version>
     <c:item>
