@@ -10,6 +10,11 @@
       <c:type-code-new/>
       <c:summary>The produced packages are now OSGi bundles.</c:summary>
     </c:item>
+    <c:item>
+      <c:date>2017-02-22</c:date>
+      <c:type-code-new/>
+      <c:summary>Use a [7.1.0, 8.0.0) version range for the fastutil dependency.</c:summary>
+    </c:item>
   </c:release>
 
   <c:release c:ticket-system="com.github.io7m.jpuddle">
