@@ -162,7 +162,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
   {
     NullCheck.notNull(context);
 
-    /**
+    /*
      * Remove the least recently fetched values first.
      */
 
@@ -198,13 +198,13 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
 
     this.checkNotDeleted();
 
-    /**
+    /*
      * Trim the pool down to the soft limit, if possible.
      */
 
     this.trim(context);
 
-    /**
+    /*
      * Check if there is a free element that matches the current key.
      */
 
@@ -223,7 +223,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
       }
     }
 
-    /**
+    /*
      * Check the estimated size against the hard limit.
      */
 
@@ -249,7 +249,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
         estimated_new);
     }
 
-    /**
+    /*
      * Create a new value.
      */
 
@@ -269,7 +269,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
       throw new JPPoolObjectCreationException(e);
     }
 
-    /**
+    /*
      * Check the size of the created object against the hard limit. Fail
      * and delete it if the limit is exceeded.
      */
@@ -290,7 +290,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
         new_size);
     }
 
-    /**
+    /*
      * Add a new entry for the object.
      */
 
