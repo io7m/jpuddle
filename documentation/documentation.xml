@@ -19,7 +19,7 @@
 <s:document
   xmlns:s="http://schemas.io7m.com/structural/2.1.0"
   xmlns:xi="http://www.w3.org/2001/XInclude">
-  <s:document-title>io7m-jpuddle 0.2.0 Documentation</s:document-title>
+  <s:document-title>io7m-jpuddle 0.3.0 Documentation</s:document-title>
   <s:document-style>documentation.css</s:document-style>
   <s:document-contents/>
 
@@ -33,6 +33,44 @@
         <s:paragraph>
           The <s:term s:type="package">io7m-jpuddle</s:term> package implements
           a very simple object pooling system.
+        </s:paragraph>
+      </s:subsection>
+      <s:subsection>
+        <s:subsection-title>Rationale</s:subsection-title>
+        <s:paragraph>
+          <s:term s:type="term">Object pooling</s:term> is a programming technique
+          where instead of creating new objects to service requests, a small
+          pool of objects is created and the objects within the pool are reused
+          repeatedly to service requests instead. This was traditionally used
+          by Java programs as a performance optimization in an attempt to
+          reduce memory allocations and therefore reduce the amount of
+          <s:term s:type="term">garbage collection</s:term> that occurs. On modern
+          Java virtual machines, however, <s:term s:type="term">object pooling</s:term>
+          as a means to improve performance in this manner is strongly
+          contraindicated: Object allocations are extremely fast (on the order
+          of a few tens of nanoseconds), <s:term s:type="term">escape analysis</s:term>
+          often eliminates allocations entirely, and modern garbage collectors
+          are optimized to make short-lived objects essentially free.
+        </s:paragraph>
+        <s:paragraph>
+          With this in mind, it may not be clear why the
+          <s:term s:type="package">io7m-jpuddle</s:term> package
+          should exist at all! The answer is that object pooling is still
+          useful when the objects represent external resources that may be
+          very expensive to acquire and/or the program should avoid acquiring
+          too many of these resources at any given time. An example of this
+          sort of use case is allocating short-lived <s:term s:type="term">framebuffer objects</s:term>
+          <s:footnote>
+            <s:link-external s:target="https://www.khronos.org/opengl/wiki/Framebuffer_Object">https://www.khronos.org/opengl/wiki/Framebuffer_Object</s:link-external>
+          </s:footnote>
+          on a GPU. Graphics memory is typically in relatively short supply
+          and creating an object on the GPU is generally considered to be
+          an expensive and slow process (relative to simply allocating an
+          object on the CPU side). A pool of <s:term s:type="term">framebuffer objects</s:term>
+          can be created that the application can reuse repeatedly without
+          needing to create new objects, and the size of the pool can be
+          bounded so that the application does not try to exceed the available
+          GPU memory.
         </s:paragraph>
       </s:subsection>
     </s:section>
@@ -62,7 +100,7 @@
           <s:verbatim s:type="example"><![CDATA[<dependency>
   <groupId>com.io7m.jpuddle</groupId>
   <artifactId>io7m-jpuddle-core</artifactId>
-  <version>0.2.0</version>
+  <version>0.3.0</version>
 </dependency>]]></s:verbatim>
         </s:paragraph>
         <s:paragraph>
