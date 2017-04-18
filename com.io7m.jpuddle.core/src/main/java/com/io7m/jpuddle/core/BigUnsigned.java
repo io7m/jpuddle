@@ -38,7 +38,7 @@ final class BigUnsigned
     final BigInteger by = new BigInteger(Long.toUnsignedString(y));
     final BigInteger r = bx.add(by);
 
-    if (r.compareTo(BigUnsigned.UNSIGNED_LONG_MAX) >= 0) {
+    if (r.compareTo(UNSIGNED_LONG_MAX) >= 0) {
       throw new ArithmeticException("Integer overflow: " + r);
     }
 
@@ -53,7 +53,7 @@ final class BigUnsigned
     final BigInteger by = BigInteger.valueOf(y);
     final BigInteger r = bx.subtract(by);
 
-    if (r.compareTo(BigUnsigned.UNSIGNED_LONG_MAX) >= 0) {
+    if (r.compareTo(UNSIGNED_LONG_MAX) >= 0) {
       throw new ArithmeticException("Integer overflow: " + r);
     }
 
