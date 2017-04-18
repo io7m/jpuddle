@@ -577,7 +577,7 @@ public abstract class JPPoolSynchronousContract
       final Integer c,
       final Integer key)
     {
-      JPPoolSynchronousContract.LOG.debug("onEstimateSize: {} {}", c, key);
+      LOG.debug("onEstimateSize: {} {}", c, key);
       return this.estimated_size;
     }
 
@@ -586,7 +586,7 @@ public abstract class JPPoolSynchronousContract
       final Integer c,
       final Integer key)
     {
-      JPPoolSynchronousContract.LOG.debug("onCreate: {} {}", c, key);
+      LOG.debug("onCreate: {} {}", c, key);
       ++this.creates;
 
       final Pooled p = new Pooled();
@@ -600,7 +600,7 @@ public abstract class JPPoolSynchronousContract
       final Integer key,
       final Pooled value)
     {
-      JPPoolSynchronousContract.LOG.debug("onGetSize: {} {} {}", c, key, value);
+      LOG.debug("onGetSize: {} {} {}", c, key, value);
       return this.size;
     }
 
@@ -610,7 +610,7 @@ public abstract class JPPoolSynchronousContract
       final Integer key,
       final Pooled value)
     {
-      JPPoolSynchronousContract.LOG.debug("onReuse: {} {} {}", c, key, value);
+      LOG.debug("onReuse: {} {} {}", c, key, value);
       ++this.reuses;
     }
 
@@ -620,7 +620,7 @@ public abstract class JPPoolSynchronousContract
       final Integer key,
       final Pooled value)
     {
-      JPPoolSynchronousContract.LOG.debug("onDelete: {} {} {}", c, key, value);
+      LOG.debug("onDelete: {} {} {}", c, key, value);
       ++this.deletes;
       value.deleted = true;
     }
@@ -632,7 +632,7 @@ public abstract class JPPoolSynchronousContract
       final Optional<Pooled> value,
       final Throwable e)
     {
-      JPPoolSynchronousContract.LOG.error("error: ", e);
+      LOG.error("error: ", e);
       this.error = e;
     }
   }
@@ -690,7 +690,7 @@ public abstract class JPPoolSynchronousContract
       final Optional<Unit> value,
       final Throwable e)
     {
-      JPPoolSynchronousContract.LOG.error("error: ", e);
+      LOG.error("error: ", e);
     }
   }
 }

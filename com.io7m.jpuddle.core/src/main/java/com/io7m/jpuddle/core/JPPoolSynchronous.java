@@ -67,7 +67,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
     final long in_size_limit_hard)
   {
     this.listener =
-      new CheckedListener<>(NullCheck.notNull(in_listener));
+      new CheckedListener<>(NullCheck.notNull(in_listener, "Listener"));
     this.entries_free =
       new Object2ReferenceOpenHashMap<>(1024);
     this.entries_used =
@@ -160,7 +160,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
   public void trim(final C context)
     throws JPPoolException
   {
-    NullCheck.notNull(context);
+    NullCheck.notNull(context, "Context");
 
     /*
      * Remove the least recently fetched values first.
@@ -193,8 +193,8 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
     final K key)
     throws JPPoolException
   {
-    NullCheck.notNull(context);
-    NullCheck.notNull(key);
+    NullCheck.notNull(context, "Context");
+    NullCheck.notNull(key, "Key");
 
     this.checkNotDeleted();
 
@@ -210,7 +210,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
 
     if (!this.entries_free_timed.isEmpty()) {
       final TimedEntry<K, T> r =
-        JPPoolSynchronous.mapListTake(this.entries_free, key);
+        mapListTake(this.entries_free, key);
 
       if (r != null) {
         this.entries_free_timed.remove(r);
@@ -340,15 +340,15 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
     final U value)
     throws JPPoolException
   {
-    NullCheck.notNull(context);
-    NullCheck.notNull(value);
+    NullCheck.notNull(context, "Context");
+    NullCheck.notNull(value, "Value");
 
     this.checkNotDeleted();
 
     if (this.entries_used.containsKey(value)) {
       final TimedEntry<K, T> e = this.entries_used.get(value);
       this.entries_used.remove(value);
-      JPPoolSynchronous.mapListPut(this.entries_free, e.key, e);
+      mapListPut(this.entries_free, e.key, e);
       this.entries_free_timed.add(e);
       this.trim(context);
       return;
@@ -374,7 +374,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
   public void deleteSafely(final C context)
     throws JPPoolException
   {
-    NullCheck.notNull(context);
+    NullCheck.notNull(context, "Context");
 
     this.checkNotDeleted();
 
@@ -389,7 +389,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
   public void deleteUnsafely(final C context)
     throws JPPoolException
   {
-    NullCheck.notNull(context);
+    NullCheck.notNull(context, "Context");
 
     this.checkNotDeleted();
     this.deleteActual(context);
@@ -475,7 +475,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
     CheckedListener(
       final JPPoolableListenerType<K, T, C> in_listener)
     {
-      this.listener = NullCheck.notNull(in_listener);
+      this.listener = NullCheck.notNull(in_listener, "Listener");
     }
 
     @Override
@@ -489,7 +489,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
         try {
           this.listener.onError(c, key, Optional.empty(), ex);
         } catch (final Throwable z) {
-          JPPoolSynchronous.LOG.error("suppressed exception: ", z);
+          LOG.error("suppressed exception: ", z);
         }
         throw ex;
       }
@@ -506,7 +506,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
         try {
           this.listener.onError(c, key, Optional.empty(), ex);
         } catch (final Throwable z) {
-          JPPoolSynchronous.LOG.error("suppressed exception: ", z);
+          LOG.error("suppressed exception: ", z);
         }
         throw ex;
       }
@@ -524,7 +524,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
         try {
           this.listener.onError(c, key, Optional.empty(), ex);
         } catch (final Throwable z) {
-          JPPoolSynchronous.LOG.error("suppressed exception: ", z);
+          LOG.error("suppressed exception: ", z);
         }
         throw ex;
       }
@@ -542,7 +542,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
         try {
           this.listener.onError(c, key, Optional.of(value), ex);
         } catch (final Throwable z) {
-          JPPoolSynchronous.LOG.error("suppressed exception: ", z);
+          LOG.error("suppressed exception: ", z);
         }
       }
     }
@@ -559,7 +559,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
         try {
           this.listener.onError(c, key, Optional.of(value), ex);
         } catch (final Throwable z) {
-          JPPoolSynchronous.LOG.error("suppressed exception: ", z);
+          LOG.error("suppressed exception: ", z);
         }
       }
     }
@@ -577,7 +577,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
         try {
           this.listener.onError(c, key, value, ex);
         } catch (final Throwable z) {
-          JPPoolSynchronous.LOG.error("suppressed exception: ", z);
+          LOG.error("suppressed exception: ", z);
         }
       }
     }
