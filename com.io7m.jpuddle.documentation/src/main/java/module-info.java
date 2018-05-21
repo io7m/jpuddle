@@ -15,8 +15,12 @@
  */
 
 /**
- * Checkstyle policy.
+ * Sized pool types (Documentation)
  */
 
-@com.io7m.jnull.NonNullByDefault package com.io7m.jpuddle.checkstyle;
+module com.io7m.jpuddle.documentation
+{
+  requires com.io7m.jpuddle.core;
 
+  exports com.io7m.jpuddle.documentation;
+}

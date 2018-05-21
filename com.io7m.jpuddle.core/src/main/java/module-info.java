@@ -14,17 +14,19 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jpuddle.checkstyle;
-
 /**
- * Marker class for looking up files by resource.
+ * Sized pool types (Core)
  */
 
-public final class Checkstyle
+module com.io7m.jpuddle.core
 {
-  private Checkstyle()
-  {
-    throw new AssertionError("Unreachable code");
-  }
-}
+  requires fastutil;
 
+  requires org.slf4j;
+  requires com.io7m.jaffirm.core;
+  requires com.io7m.junsigned.ranges;
+  requires com.io7m.jranges.core;
+  requires com.io7m.junreachable.core;
+
+  exports com.io7m.jpuddle.core;
+}

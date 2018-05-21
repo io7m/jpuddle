@@ -18,7 +18,6 @@ package com.io7m.jpuddle.core;
 
 import com.io7m.jaffirm.core.Postconditions;
 import com.io7m.jaffirm.core.Preconditions;
-import com.io7m.jnull.NullCheck;
 import com.io7m.junsigned.ranges.UnsignedRangeCheck;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -30,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedSet;
 
@@ -46,6 +46,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
   JPPoolSynchronousType<K, T, U, C>
 {
   private static final Logger LOG;
+  private static final String SEPARATOR = System.lineSeparator();
 
   static {
     LOG = LoggerFactory.getLogger(JPPoolSynchronous.class);
@@ -67,7 +68,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
     final long in_size_limit_hard)
   {
     this.listener =
-      new CheckedListener<>(NullCheck.notNull(in_listener, "Listener"));
+      new CheckedListener<>(Objects.requireNonNull(in_listener, "Listener"));
     this.entries_free =
       new Object2ReferenceOpenHashMap<>(1024);
     this.entries_used =
@@ -97,13 +98,11 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
     final Map<K, SortedSet<T>> m,
     final K key)
   {
-    if (m.containsKey(key)) {
-      final SortedSet<T> xs = m.get(key);
-      if (!xs.isEmpty()) {
-        final T first = xs.first();
-        xs.remove(first);
-        return first;
-      }
+    final SortedSet<T> xs = m.get(key);
+    if (xs != null && !xs.isEmpty()) {
+      final T first = xs.first();
+      xs.remove(first);
+      return first;
     }
     return null;
   }
@@ -113,12 +112,8 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
     final K key,
     final T value)
   {
-    final SortedSet<T> xs;
-    if (m.containsKey(key)) {
-      xs = m.get(key);
-    } else {
-      xs = new ObjectRBTreeSet<>();
-    }
+    final SortedSet<T> xs =
+      m.getOrDefault(key, new ObjectRBTreeSet<>());
 
     xs.add(value);
     m.put(key, xs);
@@ -160,7 +155,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
   public void trim(final C context)
     throws JPPoolException
   {
-    NullCheck.notNull(context, "Context");
+    Objects.requireNonNull(context, "Context");
 
     /*
      * Remove the least recently fetched values first.
@@ -193,8 +188,8 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
     final K key)
     throws JPPoolException
   {
-    NullCheck.notNull(context, "Context");
-    NullCheck.notNull(key, "Key");
+    Objects.requireNonNull(context, "Context");
+    Objects.requireNonNull(key, "Key");
 
     this.checkNotDeleted();
 
@@ -227,27 +222,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
      * Check the estimated size against the hard limit.
      */
 
-    final long e_size;
-
-    try {
-      e_size = this.listener.onEstimateSize(context, key);
-    } catch (final Throwable e) {
-      throw new JPPoolObjectCreationException(e);
-    }
-
-    final long estimated_new;
-
-    try {
-      estimated_new = BigUnsigned.checkedAddLong(this.size_now, e_size);
-    } catch (final ArithmeticException e) {
-      throw new JPPoolInternalOverflowException(e);
-    }
-
-    if (Long.compareUnsigned(estimated_new, this.size_limit_hard) > 0) {
-      throw JPPoolHardLimitExceededException.newException(
-        this.size_limit_hard,
-        estimated_new);
-    }
+    this.checkEstimatedSizeAgainstLimit(context, key);
 
     /*
      * Create a new value.
@@ -274,8 +249,45 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
      * and delete it if the limit is exceeded.
      */
 
-    final long new_size;
+    final long new_size = this.checkNewSize(context, key, r, size);
 
+    /*
+     * Add a new entry for the object.
+     */
+
+    this.addNewEntry(key, r, size, new_size);
+    return r;
+  }
+
+  private void addNewEntry(
+    final K key,
+    final T value,
+    final long size,
+    final long new_size)
+  {
+    ++this.time;
+    this.size_now = new_size;
+
+    final TimedEntry<K, T> te = new TimedEntry<>();
+    te.key = key;
+    te.size = size;
+    te.time = this.time;
+    te.value = value;
+    this.entries_used.put(te.value, te);
+  }
+
+  /*
+   * Check the size of the created object against the hard limit. Fail
+   * and delete it if the limit is exceeded.
+   */
+
+  private long checkNewSize(
+    final C context,
+    final K key,
+    final T r,
+    final long size)
+  {
+    final long new_size;
     try {
       new_size = BigUnsigned.checkedAddLong(this.size_now, size);
     } catch (final ArithmeticException e) {
@@ -289,22 +301,38 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
         this.size_limit_hard,
         new_size);
     }
+    return new_size;
+  }
 
-    /*
-     * Add a new entry for the object.
-     */
+  /*
+   * Check the estimated size against the hard limit.
+   */
 
-    ++this.time;
-    this.size_now = new_size;
+  private void checkEstimatedSizeAgainstLimit(
+    final C context,
+    final K key)
+  {
+    final long e_size;
 
-    final TimedEntry<K, T> te = new TimedEntry<>();
-    te.key = key;
-    te.size = size;
-    te.time = this.time;
-    te.value = r;
-    this.entries_used.put(te.value, te);
+    try {
+      e_size = this.listener.onEstimateSize(context, key);
+    } catch (final Throwable e) {
+      throw new JPPoolObjectCreationException(e);
+    }
 
-    return r;
+    final long estimated_new;
+
+    try {
+      estimated_new = BigUnsigned.checkedAddLong(this.size_now, e_size);
+    } catch (final ArithmeticException e) {
+      throw new JPPoolInternalOverflowException(e);
+    }
+
+    if (Long.compareUnsigned(estimated_new, this.size_limit_hard) > 0) {
+      throw JPPoolHardLimitExceededException.newException(
+        this.size_limit_hard,
+        estimated_new);
+    }
   }
 
   private void evict(
@@ -340,13 +368,13 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
     final U value)
     throws JPPoolException
   {
-    NullCheck.notNull(context, "Context");
-    NullCheck.notNull(value, "Value");
+    Objects.requireNonNull(context, "Context");
+    Objects.requireNonNull(value, "Value");
 
     this.checkNotDeleted();
 
-    if (this.entries_used.containsKey(value)) {
-      final TimedEntry<K, T> e = this.entries_used.get(value);
+    final TimedEntry<K, T> e = this.entries_used.get(value);
+    if (e != null) {
       this.entries_used.remove(value);
       mapListPut(this.entries_free, e.key, e);
       this.entries_free_timed.add(e);
@@ -356,10 +384,10 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
 
     final StringBuilder sb = new StringBuilder(128);
     sb.append("Returned value not active!");
-    sb.append(System.lineSeparator());
+    sb.append(SEPARATOR);
     sb.append("Value: ");
     sb.append(value);
-    sb.append(System.lineSeparator());
+    sb.append(SEPARATOR);
     throw new JPPoolObjectReturnException(sb.toString());
   }
 
@@ -374,7 +402,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
   public void deleteSafely(final C context)
     throws JPPoolException
   {
-    NullCheck.notNull(context, "Context");
+    Objects.requireNonNull(context, "Context");
 
     this.checkNotDeleted();
 
@@ -389,7 +417,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
   public void deleteUnsafely(final C context)
     throws JPPoolException
   {
-    NullCheck.notNull(context, "Context");
+    Objects.requireNonNull(context, "Context");
 
     this.checkNotDeleted();
     this.deleteActual(context);
@@ -447,9 +475,9 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
       this.entries_used.entrySet().iterator();
 
     sb.append("Attempted to delete a pool with items not yet returned.");
-    sb.append(System.lineSeparator());
+    sb.append(SEPARATOR);
     sb.append("The first 10 items:");
-    sb.append(System.lineSeparator());
+    sb.append(SEPARATOR);
 
     while (iter.hasNext()) {
       if (count == 10) {
@@ -461,7 +489,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
       sb.append(e.getKey());
       sb.append(" -> ");
       sb.append(e.getValue().value);
-      sb.append(System.lineSeparator());
+      sb.append(SEPARATOR);
     }
 
     return new JPPoolObjectsNotReturnedException(sb.toString());
@@ -475,7 +503,7 @@ public final class JPPoolSynchronous<K, T extends U, U, C> implements
     CheckedListener(
       final JPPoolableListenerType<K, T, C> in_listener)
     {
-      this.listener = NullCheck.notNull(in_listener, "Listener");
+      this.listener = Objects.requireNonNull(in_listener, "Listener");
     }
 
     @Override

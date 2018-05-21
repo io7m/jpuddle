@@ -49,15 +49,16 @@ public final class JPPoolHardLimitExceededException extends JPPoolException
     final long limit,
     final long size)
   {
+    final String separator = System.lineSeparator();
     final StringBuilder sb = new StringBuilder(128);
     sb.append("Hard size limit exceeded.");
-    sb.append(System.lineSeparator());
+    sb.append(separator);
     sb.append("Hard limit: ");
     sb.append(Long.toUnsignedString(limit));
-    sb.append(System.lineSeparator());
+    sb.append(separator);
     sb.append("Size:       ");
     sb.append(Long.toUnsignedString(size));
-    sb.append(System.lineSeparator());
+    sb.append(separator);
     return new JPPoolHardLimitExceededException(sb.toString(), limit, size);
   }
 

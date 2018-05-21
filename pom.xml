@@ -9,12 +9,12 @@
   <parent>
     <groupId>com.io7m.primogenitor</groupId>
     <artifactId>com.io7m.primogenitor</artifactId>
-    <version>1.0.2</version>
+    <version>3.0.0-beta0004</version>
   </parent>
 
   <groupId>com.io7m.jpuddle</groupId>
   <artifactId>com.io7m.jpuddle</artifactId>
-  <version>0.4.0</version>
+  <version>0.5.0-SNAPSHOT</version>
 
   <packaging>pom</packaging>
   <name>com.io7m.jpuddle</name>
@@ -22,16 +22,11 @@
   <url>http://github.com/io7m/jpuddle</url>
 
   <modules>
-    <module>com.io7m.jpuddle.checkstyle</module>
     <module>com.io7m.jpuddle.core</module>
     <module>com.io7m.jpuddle.documentation</module>
   </modules>
 
   <properties>
-    <siteReposDirectory>com/io7m/jpuddle</siteReposDirectory>
-    <siteDocumentationDirectory>com/io7m/jpuddle/com.io7m.jpuddle.documentation</siteDocumentationDirectory>
-    <io7m.checkstyle.artifact>com.io7m.jpuddle.checkstyle</io7m.checkstyle.artifact>
-    <io7m.checkstyle.path>/com/io7m/jpuddle/checkstyle/checkstyle.xml</io7m.checkstyle.path>
     <io7m.api.previousVersion>0.4.0</io7m.api.previousVersion>
   </properties>
 
@@ -86,50 +81,40 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>com.io7m.jnull</groupId>
-        <artifactId>com.io7m.jnull.core</artifactId>
-        <version>[1.0.0, 2.0.0)</version>
-      </dependency>
-      <dependency>
-        <groupId>com.io7m.jfunctional</groupId>
-        <artifactId>com.io7m.jfunctional.core</artifactId>
-        <version>[1.1.0, 2.0.0)</version>
-      </dependency>
-      <dependency>
         <groupId>com.io7m.jranges</groupId>
         <artifactId>com.io7m.jranges.core</artifactId>
-        <version>[2.0.1, 3.0.0)</version>
+        <version>3.0.0</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.junsigned</groupId>
         <artifactId>com.io7m.junsigned.ranges</artifactId>
-        <version>[1.0.1, 2.0.0)</version>
+        <version>2.0.0</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.jaffirm</groupId>
         <artifactId>com.io7m.jaffirm.core</artifactId>
-        <version>[1.0.0, 2.0.0)</version>
+        <version>2.0.0</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.junreachable</groupId>
         <artifactId>com.io7m.junreachable.core</artifactId>
-        <version>[1.0.1, 2.0.0)</version>
+        <version>2.1.1</version>
       </dependency>
 
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.7.23</version>
+        <version>1.8.0-beta2</version>
       </dependency>
       <dependency>
         <groupId>it.unimi.dsi</groupId>
         <artifactId>fastutil</artifactId>
-        <version>[7.1.0, 8.0.0)</version>
+        <version>8.1.1</version>
       </dependency>
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.2.1</version>
+        <version>1.3.0-alpha4</version>
       </dependency>
 
       <dependency>
@@ -143,14 +128,14 @@
   <build>
     <pluginManagement>
       <plugins>
-        <!-- Require JDK >= 1.8 -->
+        <!-- Require JDK >= 9 -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
-            <optimize>true</optimize>
+            <source>9</source>
+            <target>9</target>
+            <release>9</release>
           </configuration>
         </plugin>
 
@@ -159,6 +144,15 @@
           <groupId>com.io7m.jstructural</groupId>
           <artifactId>io7m-jstructural-maven-plugin</artifactId>
           <version>5.0.0</version>
+        </plugin>
+
+        <!-- Spot bugs -->
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <configuration>
+            <excludeFilterFile>spotbugs-filter.xml</excludeFilterFile>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
