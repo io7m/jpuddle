@@ -13,14 +13,15 @@
 
   <Match>
     <Or>
-      <Bug pattern="IMC_IMMATURE_CLASS_NO_EQUALS"/>
-      <Bug pattern="IMC_IMMATURE_CLASS_NO_TOSTRING"/>
-      <Bug pattern="OPM_OVERLY_PERMISSIVE_METHOD"/>
-      <Bug pattern="OCP_OVERLY_CONCRETE_PARAMETER"/>
-      <Bug pattern="DRE_DECLARED_RUNTIME_EXCEPTION"/>
       <Bug pattern="AI_ANNOTATION_ISSUES_NEEDS_NULLABLE"/>
+      <Bug pattern="DRE_DECLARED_RUNTIME_EXCEPTION"/>
       <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CHECKED"/>
       <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"/>
+      <Bug pattern="FCBL_FIELD_COULD_BE_LOCAL"/>
+      <Bug pattern="IMC_IMMATURE_CLASS_NO_EQUALS"/>
+      <Bug pattern="IMC_IMMATURE_CLASS_NO_TOSTRING"/>
+      <Bug pattern="OCP_OVERLY_CONCRETE_PARAMETER"/>
+      <Bug pattern="OPM_OVERLY_PERMISSIVE_METHOD"/>
       <Bug pattern="WEM_WEAK_EXCEPTION_MESSAGING"/>
     </Or>
   </Match>
