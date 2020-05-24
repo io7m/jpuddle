@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.io7m.primogenitor</groupId>
     <artifactId>com.io7m.primogenitor.full</artifactId>
-    <version>3.1.0</version>
+    <version>5.0.0</version>
   </parent>
 
   <groupId>com.io7m.jpuddle</groupId>
@@ -24,6 +24,7 @@
   </modules>
 
   <properties>
+    <com.codacy.id>97f853737ec84d449e83d58c2fff8e0f</com.codacy.id>
     <io7m.api.previousVersion>0.4.0</io7m.api.previousVersion>
   </properties>
 
@@ -99,6 +100,11 @@
       </dependency>
 
       <dependency>
+        <groupId>com.io7m.primogenitor</groupId>
+        <artifactId>com.io7m.primogenitor.support</artifactId>
+        <version>5.0.0</version>
+      </dependency>
+      <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
         <version>1.8.0-beta2</version>
@@ -125,17 +131,6 @@
   <build>
     <pluginManagement>
       <plugins>
-        <!-- Require JDK >= 11 -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <configuration>
-            <source>11</source>
-            <target>11</target>
-            <release>11</release>
-          </configuration>
-        </plugin>
-
         <!-- KStructural Maven Plugin -->
         <plugin>
           <groupId>com.io7m.jstructural</groupId>
