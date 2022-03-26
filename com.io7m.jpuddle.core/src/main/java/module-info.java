@@ -20,7 +20,7 @@
 
 module com.io7m.jpuddle.core
 {
-  requires fastutil;
+  requires it.unimi.dsi.fastutil;
 
   requires org.slf4j;
   requires com.io7m.jaffirm.core;
