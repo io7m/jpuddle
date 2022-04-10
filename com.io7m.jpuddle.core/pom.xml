@@ -15,13 +15,7 @@
   <packaging>jar</packaging>
   <name>com.io7m.jpuddle.core</name>
   <description>Sized pool types (Core)</description>
-  <url>http://io7m.github.io/jpuddle/</url>
-
-  <scm>
-    <url>${project.parent.scm.url}</url>
-    <connection>${project.parent.scm.connection}</connection>
-    <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
-  </scm>
+  <url>https://www.io7m.com/software/jpuddle</url>
 
   <dependencies>
     <dependency>
