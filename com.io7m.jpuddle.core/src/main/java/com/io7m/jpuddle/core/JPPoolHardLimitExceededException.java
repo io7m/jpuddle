@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -49,15 +49,16 @@ public final class JPPoolHardLimitExceededException extends JPPoolException
     final long limit,
     final long size)
   {
+    final String separator = System.lineSeparator();
     final StringBuilder sb = new StringBuilder(128);
     sb.append("Hard size limit exceeded.");
-    sb.append(System.lineSeparator());
+    sb.append(separator);
     sb.append("Hard limit: ");
     sb.append(Long.toUnsignedString(limit));
-    sb.append(System.lineSeparator());
+    sb.append(separator);
     sb.append("Size:       ");
     sb.append(Long.toUnsignedString(size));
-    sb.append(System.lineSeparator());
+    sb.append(separator);
     return new JPPoolHardLimitExceededException(sb.toString(), limit, size);
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 <code@io7m.com> http://io7m.com
+ * Copyright © 2015 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -15,8 +15,12 @@
  */
 
 /**
- * Checkstyle policy.
+ * Sized pool types (Documentation)
  */
 
-@com.io7m.jnull.NonNullByDefault package com.io7m.jpuddle.checkstyle;
+module com.io7m.jpuddle.documentation
+{
+  requires com.io7m.jpuddle.core;
 
+  exports com.io7m.jpuddle.documentation;
+}

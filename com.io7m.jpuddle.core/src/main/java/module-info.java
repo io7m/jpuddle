@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 <code@io7m.com> http://io7m.com
+ * Copyright © 2015 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,17 +14,22 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jpuddle.checkstyle;
-
 /**
- * Marker class for looking up files by resource.
+ * Sized pool types (Core)
  */
 
-public final class Checkstyle
+module com.io7m.jpuddle.core
 {
-  private Checkstyle()
-  {
-    throw new AssertionError("Unreachable code");
-  }
-}
+  requires static org.osgi.annotation.bundle;
+  requires static org.osgi.annotation.versioning;
 
+  requires it.unimi.dsi.fastutil;
+
+  requires org.slf4j;
+  requires com.io7m.jaffirm.core;
+  requires com.io7m.junsigned.ranges;
+  requires com.io7m.jranges.core;
+  requires com.io7m.junreachable.core;
+
+  exports com.io7m.jpuddle.core;
+}

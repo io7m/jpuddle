@@ -8,37 +8,19 @@
   <parent>
     <groupId>com.io7m.jpuddle</groupId>
     <artifactId>com.io7m.jpuddle</artifactId>
-    <version>0.4.0</version>
+    <version>0.5.0</version>
   </parent>
   <artifactId>com.io7m.jpuddle.core</artifactId>
 
-  <packaging>bundle</packaging>
+  <packaging>jar</packaging>
   <name>com.io7m.jpuddle.core</name>
   <description>Sized pool types (Core)</description>
-  <url>http://io7m.github.io/jpuddle/</url>
-
-  <scm>
-    <url>${project.parent.scm.url}</url>
-    <connection>${project.parent.scm.connection}</connection>
-    <developerConnection>${project.parent.scm.developerConnection}</developerConnection>
-  </scm>
+  <url>https://www.io7m.com/software/jpuddle</url>
 
   <dependencies>
     <dependency>
-      <groupId>com.io7m.jnull</groupId>
-      <artifactId>com.io7m.jnull.core</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.io7m.junreachable</groupId>
       <artifactId>com.io7m.junreachable.core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.io7m.jfunctional</groupId>
-      <artifactId>com.io7m.jfunctional.core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.io7m.jranges</groupId>
-      <artifactId>com.io7m.jranges.core</artifactId>
     </dependency>
     <dependency>
       <groupId>com.io7m.junsigned</groupId>
@@ -48,6 +30,10 @@
       <groupId>com.io7m.jaffirm</groupId>
       <artifactId>com.io7m.jaffirm.core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.io7m.jranges</groupId>
+      <artifactId>com.io7m.jranges.core</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -56,6 +42,17 @@
     <dependency>
       <groupId>it.unimi.dsi</groupId>
       <artifactId>fastutil</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.annotation.bundle</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.annotation.versioning</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -72,26 +69,6 @@
 
   <build>
     <plugins>
-      <!-- Check style -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-      </plugin>
-
-      <!-- Produce OSGi bundle -->
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <extensions>true</extensions>
-        <configuration>
-          <instructions>
-            <Export-Package>
-              com.io7m.jpuddle.core
-            </Export-Package>
-          </instructions>
-        </configuration>
-      </plugin>
-
       <!-- Ignore dependencies that bytecode analysis gets wrong. -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -99,9 +76,17 @@
         <configuration>
           <failOnWarning>true</failOnWarning>
           <ignoredUnusedDeclaredDependencies>
+            <ignoredUnusedDeclaredDependency>junit:junit:*</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>ch.qos.logback:logback-classic:*</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>com.io7m.jranges:com.io7m.jranges.core:*</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
         </configuration>
+      </plugin>
+
+      <!-- Determine test coverage -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </build>

@@ -1,11 +1,15 @@
 jpuddle
 ===
 
-[![Build Status](https://travis-ci.org/io7m/jpuddle.svg)](https://travis-ci.org/io7m/jpuddle)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.io7m.jpuddle/com.io7m.jpuddle/badge.png)](https://maven-badges.herokuapp.com/maven-central/com.io7m.jpuddle/com.io7m.jpuddle)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c38d59de52c3405ba7deb0d649a4dfff)](https://www.codacy.com/app/github_79/jpuddle?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=io7m/jpuddle&amp;utm_campaign=Badge_Grade)
-
-See https://io7m.github.io/jpuddle/ for more information.
+[![Maven Central](https://img.shields.io/maven-central/v/com.io7m.jpuddle/com.io7m.jpuddle.svg?style=flat-square)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.io7m.jpuddle%22)
+[![Maven Central (snapshot)](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.io7m.jpuddle/com.io7m.jpuddle.svg?style=flat-square)](https://oss.sonatype.org/content/repositories/snapshots/com/io7m/jpuddle/)
+[![Codecov](https://img.shields.io/codecov/c/github/io7m/jpuddle.svg?style=flat-square)](https://codecov.io/gh/io7m/jpuddle)
 
 ![jpuddle](./src/site/resources/jpuddle.jpg?raw=true)
+
+| JVM             | Platform | Status |
+|-----------------|----------|--------|
+| OpenJDK LTS     | Linux    | [![Build (OpenJDK LTS, Linux)](https://img.shields.io/github/workflow/status/io7m/jpuddle/main-openjdk_lts-linux)](https://github.com/io7m/jpuddle/actions?query=workflow%3Amain-openjdk_lts-linux) |
+| OpenJDK Current | Linux    | [![Build (OpenJDK Current, Linux)](https://img.shields.io/github/workflow/status/io7m/jpuddle/main-openjdk_current-linux)](https://github.com/io7m/jpuddle/actions?query=workflow%3Amain-openjdk_current-linux)
+| OpenJDK Current | Windows  | [![Build (OpenJDK Current, Windows)](https://img.shields.io/github/workflow/status/io7m/jpuddle/main-openjdk_current-windows)](https://github.com/io7m/jpuddle/actions?query=workflow%3Amain-openjdk_current-windows)
 

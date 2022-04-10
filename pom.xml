@@ -1,44 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-  xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>com.io7m.primogenitor</groupId>
-    <artifactId>com.io7m.primogenitor</artifactId>
-    <version>1.0.2</version>
+    <artifactId>com.io7m.primogenitor.full</artifactId>
+    <version>7.0.0</version>
   </parent>
 
   <groupId>com.io7m.jpuddle</groupId>
   <artifactId>com.io7m.jpuddle</artifactId>
-  <version>0.4.0</version>
+  <version>0.5.0</version>
 
   <packaging>pom</packaging>
   <name>com.io7m.jpuddle</name>
   <description>Sized pool types</description>
-  <url>http://github.com/io7m/jpuddle</url>
+  <url>https://www.io7m.com/software/jpuddle</url>
 
   <modules>
-    <module>com.io7m.jpuddle.checkstyle</module>
     <module>com.io7m.jpuddle.core</module>
     <module>com.io7m.jpuddle.documentation</module>
   </modules>
 
   <properties>
-    <siteReposDirectory>com/io7m/jpuddle</siteReposDirectory>
-    <siteDocumentationDirectory>com/io7m/jpuddle/com.io7m.jpuddle.documentation</siteDocumentationDirectory>
-    <io7m.checkstyle.artifact>com.io7m.jpuddle.checkstyle</io7m.checkstyle.artifact>
-    <io7m.checkstyle.path>/com/io7m/jpuddle/checkstyle/checkstyle.xml</io7m.checkstyle.path>
     <io7m.api.previousVersion>0.4.0</io7m.api.previousVersion>
   </properties>
 
   <licenses>
     <license>
       <name>ISC License</name>
-      <url>http://io7m.com/license/isc.txt</url>
+      <url>https://www.io7m.com/license/isc.txt</url>
     </license>
   </licenses>
 
@@ -53,20 +48,20 @@
       <id>io7m</id>
       <name>io7m</name>
       <email>code@io7m.com</email>
-      <url>http://io7m.com</url>
+      <url>https://www.io7m.com</url>
     </developer>
   </developers>
 
   <issueManagement>
-    <url>http://github.com/io7m/jpuddle/issues</url>
+    <url>https://github.com/io7m/jpuddle/issues</url>
     <system>GitHub Issues</system>
   </issueManagement>
 
   <distributionManagement>
     <site>
-      <id>GitHub</id>
-      <name>GitHub</name>
-      <url>http://io7m.github.io/jpuddle</url>
+      <id>io7m.com</id>
+      <name>io7m.com</name>
+      <url>https://www.io7m.com/software/jpuddle</url>
     </site>
     <repository>
       <id>sonatype-nexus-staging</id>
@@ -75,8 +70,8 @@
   </distributionManagement>
 
   <ciManagement>
-    <system>Travis CI</system>
-    <url>https://travis-ci.org/io7m/jpuddle</url>
+    <system>GitHub Actions</system>
+    <url>https://github.com/jpuddle/actions</url>
   </ciManagement>
 
   <prerequisites>
@@ -86,56 +81,62 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>com.io7m.jnull</groupId>
-        <artifactId>com.io7m.jnull.core</artifactId>
-        <version>[1.0.0, 2.0.0)</version>
-      </dependency>
-      <dependency>
-        <groupId>com.io7m.jfunctional</groupId>
-        <artifactId>com.io7m.jfunctional.core</artifactId>
-        <version>[1.1.0, 2.0.0)</version>
-      </dependency>
-      <dependency>
         <groupId>com.io7m.jranges</groupId>
         <artifactId>com.io7m.jranges.core</artifactId>
-        <version>[2.0.1, 3.0.0)</version>
+        <version>5.0.0</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.junsigned</groupId>
         <artifactId>com.io7m.junsigned.ranges</artifactId>
-        <version>[1.0.1, 2.0.0)</version>
+        <version>3.0.0</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.jaffirm</groupId>
         <artifactId>com.io7m.jaffirm.core</artifactId>
-        <version>[1.0.0, 2.0.0)</version>
+        <version>4.0.0</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.junreachable</groupId>
         <artifactId>com.io7m.junreachable.core</artifactId>
-        <version>[1.0.1, 2.0.0)</version>
+        <version>4.0.0</version>
       </dependency>
 
       <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.annotation.bundle</artifactId>
+        <version>2.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.annotation.versioning</artifactId>
+        <version>1.1.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.io7m.primogenitor</groupId>
+        <artifactId>com.io7m.primogenitor.support</artifactId>
+        <version>7.0.0</version>
+      </dependency>
+      <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.7.23</version>
+        <version>2.0.0-alpha7</version>
       </dependency>
       <dependency>
         <groupId>it.unimi.dsi</groupId>
         <artifactId>fastutil</artifactId>
-        <version>[7.1.0, 8.0.0)</version>
+        <version>8.5.8</version>
       </dependency>
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.2.1</version>
+        <version>1.3.0-alpha14</version>
       </dependency>
 
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.12</version>
+        <version>4.13.2</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -143,25 +144,38 @@
   <build>
     <pluginManagement>
       <plugins>
-        <!-- Require JDK >= 1.8 -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
-            <optimize>true</optimize>
-          </configuration>
-        </plugin>
-
         <!-- KStructural Maven Plugin -->
         <plugin>
           <groupId>com.io7m.jstructural</groupId>
           <artifactId>io7m-jstructural-maven-plugin</artifactId>
           <version>5.0.0</version>
         </plugin>
+
+        <!-- Spot bugs -->
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <configuration>
+            <excludeFilterFile>spotbugs-filter.xml</excludeFilterFile>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
+
+    <plugins>
+      <!-- Spot bugs -->
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+      </plugin>
+
+      <!-- Generate a site -->
+      <plugin>
+        <groupId>com.io7m.minisite</groupId>
+        <artifactId>com.io7m.minisite.maven_plugin</artifactId>
+        <inherited>false</inherited>
+      </plugin>
+    </plugins>
   </build>
 
 </project>

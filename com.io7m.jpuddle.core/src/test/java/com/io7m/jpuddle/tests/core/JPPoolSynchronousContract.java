@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2016 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,7 +16,6 @@
 
 package com.io7m.jpuddle.tests.core;
 
-import com.io7m.jfunctional.Unit;
 import com.io7m.jpuddle.core.JPPoolHardLimitExceededException;
 import com.io7m.jpuddle.core.JPPoolInternalOverflowException;
 import com.io7m.jpuddle.core.JPPoolObjectCreationException;
@@ -32,6 +31,7 @@ import org.junit.rules.ExpectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public abstract class JPPoolSynchronousContract
@@ -498,7 +498,7 @@ public abstract class JPPoolSynchronousContract
 
   private static final class Pooled
   {
-    private int     value;
+    private int value;
     private boolean deleted;
 
     Pooled()
@@ -561,10 +561,10 @@ public abstract class JPPoolSynchronousContract
     JPPoolableListenerType<Integer, Pooled, Integer>
   {
     Throwable error;
-    long      estimated_size;
-    int       creates;
-    int       deletes;
-    int       reuses;
+    long estimated_size;
+    int creates;
+    int deletes;
+    int reuses;
     long size = 1L;
 
     PooledListener()
@@ -634,6 +634,29 @@ public abstract class JPPoolSynchronousContract
     {
       LOG.error("error: ", e);
       this.error = e;
+    }
+  }
+
+
+  private static final class Unit
+  {
+    private Unit()
+    {
+
+    }
+
+    public static Unit unit()
+    {
+      return new Unit();
+    }
+
+    @Override
+    public boolean equals(final Object o)
+    {
+      if (this == o) {
+        return true;
+      }
+      return o != null && Objects.equals(this.getClass(), o.getClass());
     }
   }
 
