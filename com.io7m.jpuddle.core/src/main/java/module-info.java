@@ -20,6 +20,9 @@
 
 module com.io7m.jpuddle.core
 {
+  requires static org.osgi.annotation.bundle;
+  requires static org.osgi.annotation.versioning;
+
   requires it.unimi.dsi.fastutil;
 
   requires org.slf4j;
